@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>视频播放</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <input type="text" id="fileIdInput" placeholder="输入文件ID">
+  <button id="playButton">播放</button>
+  <br><br>
+  <video id="videoPlayer" controls>
+    <source id="videoSource" src="" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <script>
+    $(document).ready(function() {
+      $('#playButton').click(function() {
+        var fileId = $('#fileIdInput').val(); // 获取文件ID
+
+        // 发送文件ID到后端获取视频路径
+        $.ajax({
+          url: 'http://127.0.0.1:3017/download/' + fileId, // 拼接文件ID到URL
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            var basePath = 'http://127.0.0.1:3017'; // 获取当前页面的基础路径
+            var videoPath = basePath + '/' + data.data.path; // 拼接绝对路径
+            console.log(videoPath)
+            var videoPath=decodeURIComponent(videoPath);
+            console.log(videoPath)
+            $('#videoSource').attr('src', videoPath); // 设置视频源
+            $('#videoPlayer')[0].load(); // 加载视频
+          },
+          error: function(xhr, status, error) {
+            console.error('获取视频路径失败:', error);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
