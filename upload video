@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style/personal.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<!--上传视频模块-->
+    
+
+      <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="videoFile" name="file">
+        <input type="text" id="filenameInput" placeholder="自定义文件名">
+        <button type="submit">上传</button>
+      </form>
+
+
+ 
+<script>
+  $(document).ready(function () {
+    $("#uploadForm").submit(function (event) {
+      event.preventDefault(); // 防止表单默认提交行为
+
+      var file = $("#videoFile")[0].files[0];
+      var reader = new FileReader();
+
+      reader.onload = function (event) {
+        var videoData = event.target.result;
+        var filename = $("#filenameInput").val()+'.mp4'; // 获取自定义文件名
+
+        // 使用 FormData 对象
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("filename", filename);
+
+        $.ajax({
+          url: "http://127.0.0.1:3017/upvideo",
+          type: "POST",
+          processData: false, // 关闭 processData
+          contentType: false, // 关闭 contentType
+          data: formData, // 使用 formData 作为请求数据
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+          },
+        });
+      };
+
+      reader.readAsDataURL(file);
+    });
+  });
+</script>
+
+      </script>
+    
+</body>
+</html>
