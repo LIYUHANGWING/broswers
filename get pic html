@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>获取头像</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <input type="text" id="usernameInput" placeholder="输入用户名">
+  <button id="getAvatarBtn">获取头像</button>
+  <br>
+  <img id="avatarImage" src="" alt="头像">
+    <script>
+        $(document).ready(function() {
+       // 监听获取头像按钮的点击事件
+      $('#getAvatarBtn').click(function() {
+       var username = $('#usernameInput').val(); // 获取输入的用户名
+
+      $.ajax({
+        url: 'http://127.0.0.1:3017/getavatar/' + username, // 修改此处，将用户名直接拼接到 URL 路径中
+        method: 'GET',
+        success: function(response) {
+        console.log(response)
+        var avatarPath = response.data.avatar; // 修改此处，从响应中获取头像路径
+        var imageUrl = 'http://127.0.0.1:5500/pluginSup/' + avatarPath; // 根据需要拼接头像路径
+
+        // 显示头像
+          $('#avatarImage').attr('src', imageUrl);
+        },
+        error: function(error) {
+           console.log('获取头像失败:', error);
+        }
+        });
+      });
+    });
+
+    </script>
+
+
+</body>
+</html>
